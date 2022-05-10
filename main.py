@@ -3,6 +3,7 @@ from distutils.command.build import build
 from xml.dom.minidom import Element
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 import win32clipboard
 
@@ -30,8 +31,8 @@ def copy_text_for_clipboard(driver):
 """
 def add_tags(driver):
     title = driver.find_elements_by_xpath("//input[@class='ptitle']")
-    get_tag = driver.find_element_by_class("tax_input_list-tags ui-autocomplete-input")
-    button_atualizar = driver.find_element_by_class("button button-primary save alignright")
+    get_tag = driver.find_element_by_xpath("//textarea[@class='tax_input_list-tags ui-autocomplete-input']")
+    button_atualizar = driver.find_elements_by_xpath("//button[@class='button button-primary save alignright']")[0]
     get_title = title[0]
     if get_title:
         get_title.send_keys(Keys.CONTROL, 'a')
@@ -39,7 +40,7 @@ def add_tags(driver):
         win32clipboard.OpenClipboard()
         text = win32clipboard.GetClipboardData()
         win32clipboard.CloseClipboard()
-        get_tag.send_keys(text)
+        get_tag.send_keys(Keys.CONTROL, 'v')
         button_atualizar.click()
         
 PATH = "C:\chromedriver.exe" #Altere está linha para o Chrome Driver
@@ -52,13 +53,14 @@ source_html = driver.page_source
 posts = []
 posts = driver.find_elements_by_xpath("//button[@class='button-link editinline']")
 
-while True:
-    for count in range(600):
-        if posts:
-            click_posting = posts[count]
-            click_posting.click()
-            add_tags(driver=driver)
-    break
+for count in range(0, 600):
+    post_counts = posts[count]
+    if post_counts:
+        click_posting = post_counts
+        driver.implicitly_wait(10)
+        click_posting.click()
+        add_tags(driver=driver)
+        time.sleep(5)
 time.sleep(30)
 
 
