@@ -4,6 +4,7 @@ from xml.dom.minidom import Element
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
+import win32clipboard
 
 def efetuar_login(driver):
     try:
@@ -18,40 +19,44 @@ def efetuar_login(driver):
     except:
         #Tratar futuros excepts
         pass
-
-def listas_de_posts(driver):
-    html_source = Element.getAttribute('innerHtml')
-    
-    try:
-        pass
-    except:
-        pass
-
+"""
+def copy_text_for_clipboard(driver):
+    driver.send_keys(Keys.CONTROL, 'a')
+    driver.send_keys(Keys.CONTROL, 'c')
+    win32clipboard.OpenClipboard()
+    text = win32clipboard.GetClipboardData()
+    win32clipboard.CloseClipboard()
+    return text
+"""
+def add_tags(driver):
+    title = driver.find_elements_by_xpath("//input[@class='ptitle']")
+    get_tag = driver.find_element_by_class("tax_input_list-tags ui-autocomplete-input")
+    get_title = title[0]
+    if get_title:
+        get_title.send_keys(Keys.CONTROL, 'a')
+        get_title.send_keys(Keys.CONTROL, 'c')
+        win32clipboard.OpenClipboard()
+        text = win32clipboard.GetClipboardData()
+        win32clipboard.CloseClipboard()
+        get_tag.send_keys(text)
+        
 PATH = "C:\chromedriver.exe" #Altere está linha para o Chrome Driver
-
-lista_de_pilhas_verificadas = []
 
 driver = webdriver.Chrome(PATH)
 print(driver.title)
 driver.get("http://obrasflex.com.br/wp-admin/edit.php?post_type=listing")
 efetuar_login(driver=driver)
 source_html = driver.page_source
-teste = []
-teste = driver.find_elements_by_xpath("//button[@class='button-link editinline']")
+posts = []
+posts = driver.find_elements_by_xpath("//button[@class='button-link editinline']")
 
-for e in teste:
-    print(e.text)
-
-with open('source_txt.txt', 'w+', encoding="utf-8") as source_txt:
-    if source_txt != NULL:
-        source_txt.truncate(0)
-        source_txt.write(source_html)
-    else:
-        source_txt.write(source_html)
-    if "the-list" in source_txt:
-        print("Existe essa palavra vadia")
-    else:
-        print("Não achei nenhuma palavra desse tipo")
+while True:
+    for count in range(600):
+        if posts:
+            click_posting = posts[count]
+            click_posting.click()
+            add_tags(driver=driver)
+            time.sleep(30)
 time.sleep(30)
 
 
