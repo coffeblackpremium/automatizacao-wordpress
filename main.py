@@ -31,6 +31,7 @@ def copy_text_for_clipboard(driver):
 def add_tags(driver):
     title = driver.find_elements_by_xpath("//input[@class='ptitle']")
     get_tag = driver.find_element_by_class("tax_input_list-tags ui-autocomplete-input")
+    button_atualizar = driver.find_element_by_class("button button-primary save alignright")
     get_title = title[0]
     if get_title:
         get_title.send_keys(Keys.CONTROL, 'a')
@@ -39,6 +40,7 @@ def add_tags(driver):
         text = win32clipboard.GetClipboardData()
         win32clipboard.CloseClipboard()
         get_tag.send_keys(text)
+        button_atualizar.click()
         
 PATH = "C:\chromedriver.exe" #Altere está linha para o Chrome Driver
 
@@ -56,7 +58,7 @@ while True:
             click_posting = posts[count]
             click_posting.click()
             add_tags(driver=driver)
-            time.sleep(30)
+    break
 time.sleep(30)
 
 
