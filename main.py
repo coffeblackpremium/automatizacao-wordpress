@@ -12,8 +12,8 @@ import win32clipboard
 
 def efetuar_login(driver):
     try:
-        login = driver.find_element(By.ID, 'user_login').send_keys("producao")
-        password = driver.find_element(By.ID, "user_pass").send_keys("pro80of")
+        login = driver.find_element(By.ID, 'user_login').send_keys("")
+        password = driver.find_element(By.ID, "user_pass").send_keys("")
         login_submit = driver.find_element(By.ID, "wp-submit").click()
         time.sleep(5)
     except:
